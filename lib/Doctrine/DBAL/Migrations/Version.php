@@ -61,9 +61,19 @@ class Version
     /**
      * The version in timestamp format (YYYYMMDDHHMMSS)
      *
-     * @param int
+     * @param string|int
      */
     private $version;
+
+    /**
+     * @var string
+     */
+    private $description;
+
+    /**
+     * @var string
+     */
+    private $username;
 
     /**
      * The migration instance for this version
@@ -109,7 +119,10 @@ class Version
         $this->class = $class;
         $this->connection = $configuration->getConnection();
         $this->migration = new $class($this);
-        $this->version = $version;
+        $this->version = method_exists($this->migration, 'getName')? $this->migration->getName() : $version;
+        $this->description = method_exists($this->migration, 'getDescription')? $this->migration->getDescription() : '';
+        $this->username = method_exists($this->migration, 'getUserName')? $this->migration->getUserName() : '';
+
 
         if ($schemaProvider !== null) {
             $this->schemaProvider = $schemaProvider;
@@ -161,10 +174,20 @@ class Version
         $action = $direction === 'up' ? 'insert' : 'delete';
 
         $this->configuration->createMigrationTable();
-        $this->connection->$action(
-            $this->configuration->getMigrationsTableName(),
-            [$this->configuration->getMigrationsColumnName() => $this->version]
-        );
+
+        $data = [
+            $this->configuration->getMigrationsColumnName() => $this->version,
+        ];
+
+        if($action == 'insert') {
+            $data += [
+                    $this->configuration->getMigrationsDescriptionColumnName() => $this->description,
+                    $this->configuration->getMigrationsUserColumnName() => $this->username,
+                    $this->configuration->getMigrationsDateColumnName() => date('Y-m-d H:i:s'),
+                ];
+        }
+
+        $this->connection->$action($this->configuration->getMigrationsTableName(), $data);
     }
 
     public function markNotMigrated()

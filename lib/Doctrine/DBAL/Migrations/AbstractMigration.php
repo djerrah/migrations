@@ -96,10 +96,21 @@ abstract class AbstractMigration
      *
      * @return string
      */
-    public function getDescription()
-    {
-        return '';
-    }
+    abstract public function getDescription();
+
+    /**
+     * Get migration Name
+     *
+     * @return string
+     */
+    abstract public function getName();
+
+    /**
+     * Get migration userName
+     *
+     * @return string
+     */
+    abstract public function getUserName();
 
     /**
      * Print a warning message if the condition evaluates to TRUE.

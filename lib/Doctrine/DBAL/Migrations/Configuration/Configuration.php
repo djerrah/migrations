@@ -111,6 +111,27 @@ class Configuration
     private $migrationsColumnName = 'version';
 
     /**
+     * The migration description column name
+     *
+     * @var string
+     */
+    private $migrationsDescriptionColumnName = 'description';
+
+    /**
+     * The migration date column name
+     *
+     * @var string
+     */
+    private $migrationsDateColumnName = 'date';
+
+    /**
+     * The migration username column name
+     *
+     * @var string
+     */
+    private $migrationsUserColumnName = 'username';
+
+    /**
      * The path to a directory where new migration classes will be written
      *
      * @var string
@@ -315,6 +336,78 @@ class Configuration
     public function getMigrationsColumnName()
     {
         return $this->migrationsColumnName;
+    }
+
+    /**
+     * GET  MigrationsDescriptionColumnName
+     *
+     * @return string
+     */
+    public function getMigrationsDescriptionColumnName()
+    {
+        return $this->migrationsDescriptionColumnName;
+    }
+
+    /**
+     * SET MigrationsDescriptionColumnName
+     *
+     * @param string $migrationsDescriptionColumnName
+     *
+     * @return $this
+     */
+    public function setMigrationsDescriptionColumnName($migrationsDescriptionColumnName)
+    {
+        $this->migrationsDescriptionColumnName = $migrationsDescriptionColumnName;
+
+        return $this;
+    }
+
+    /**
+     * GET  MigrationsDateColumnName
+     *
+     * @return string
+     */
+    public function getMigrationsDateColumnName()
+    {
+        return $this->migrationsDateColumnName;
+    }
+
+    /**
+     * SET MigrationsDateColumnName
+     *
+     * @param string $migrationsDateColumnName
+     *
+     * @return $this
+     */
+    public function setMigrationsDateColumnName($migrationsDateColumnName)
+    {
+        $this->migrationsDateColumnName = $migrationsDateColumnName;
+
+        return $this;
+    }
+
+    /**
+     * GET  MigrationsUserColumnName
+     *
+     * @return string
+     */
+    public function getMigrationsUserColumnName()
+    {
+        return $this->migrationsUserColumnName;
+    }
+
+    /**
+     * SET MigrationsUserColumnName
+     *
+     * @param string $migrationsUserColumnName
+     *
+     * @return $this
+     */
+    public function setMigrationsUserColumnName($migrationsUserColumnName)
+    {
+        $this->migrationsUserColumnName = $migrationsUserColumnName;
+
+        return $this;
     }
 
     /**
@@ -726,7 +819,26 @@ class Configuration
         }
 
         $columns = [
-            $this->migrationsColumnName => new Column($this->migrationsColumnName, Type::getType('string'), ['length' => 255]),
+            $this->migrationsColumnName => new Column(
+                $this->migrationsColumnName,
+                Type::getType('string'),
+                ['length' => 255]
+            ),
+            $this->migrationsDescriptionColumnName => new Column(
+                $this->migrationsDescriptionColumnName,
+                Type::getType('text'),
+                ['notnull' => false]
+            ),
+            $this->migrationsDateColumnName => new Column(
+                $this->migrationsDateColumnName,
+                Type::getType('datetime'),
+                ['notnull' => false]
+            ),
+            $this->migrationsUserColumnName => new Column(
+                $this->migrationsUserColumnName,
+                Type::getType('string'),
+                ['length' => 255, 'notnull' => false]
+            ),
         ];
         $table = new Table($this->migrationsTableName, $columns);
         $table->setPrimaryKey([$this->migrationsColumnName]);
